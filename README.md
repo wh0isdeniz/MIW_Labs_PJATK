@@ -1,7 +1,9 @@
 # Knowledge Engineering Methods (MIW)
 
-Laboratory assignments for the course **Knowledge Engineering Methods (MIW)**  
+Project assignments for the course **Knowledge Engineering Methods (MIW)**  
 at the **Polish-Japanese Academy of Information Technology (PJATK)**.
+
+- All assignments were **graded 10/10**
 
 ---
 
