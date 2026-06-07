@@ -3,7 +3,8 @@
 Project assignments for the course **Knowledge Engineering Methods (MIW)**  
 at the **Polish-Japanese Academy of Information Technology (PJATK)**.
 
-- All assignments were **graded 10/10**
+- Tasks 01–04 — graded **10/10**
+- Final — graded **18/18**
 
 ---
 
@@ -13,6 +14,9 @@ at the **Polish-Japanese Academy of Information Technology (PJATK)**.
 - **Markov models** — state-based transition modeling for sequential data
 - **Adaptive strategies** — agents that learn opponent behaviour and optimise decisions over time
 - **Supervised learning** — classical classification algorithms benchmarked on non-linear data
+- **Neural networks from scratch** — backpropagation, activation functions, batch vs online training
+- **Convolutional networks** — image classification, residual connections, regularisation
+- **Symbolic AI / Prolog** — knowledge representation, spatial reasoning, recursive pathfinding
 
 ---
 
@@ -35,13 +39,13 @@ An adaptive agent that learns an opponent's strategy in real time:
 
 A benchmark pipeline comparing five classifiers on a non-linearly separable dataset:
 
-| Model | Test Accuracy |
-|-------|:-------------:|
-| Custom Logistic Regression | 0.9200 |
-| Decision Tree (best) | 0.9750 |
-| Random Forest (best) | 0.9750 |
-| SVM (RBF) | 0.9650 |
-| Ensemble (Soft Voting) | 0.9650 |
+| Model                      | Test Accuracy |
+| -------------------------- | :-----------: |
+| Custom Logistic Regression |    0.9200     |
+| Decision Tree (best)       |    0.9750     |
+| Random Forest (best)       |    0.9750     |
+| SVM (RBF)                  |    0.9650     |
+| Ensemble (Soft Voting)     |    0.9650     |
 
 - **Custom logistic regression** implemented from scratch — batch gradient descent, Xavier init, early stopping
 - **Decision Tree** grid-searched over depth (2–None) and criterion (Gini / Entropy)
@@ -53,9 +57,64 @@ A benchmark pipeline comparing five classifiers on a non-linearly separable data
 
 ---
 
+### 03 · Neural Network from Scratch — Function Approximation
+
+A single-hidden-layer neural network built entirely with **NumPy** (no PyTorch, no TensorFlow), trained to approximate the noisy cubic **y ≈ x³ + x + noise**:
+
+| Model                       | Train MSE | Test MSE | Verdict           |
+| --------------------------- | :-------: | :------: | ----------------- |
+| Batch + tanh, H=15          |  0.0176   |  0.1063  | Overfitting       |
+| Batch + tanh, H=1           |  37.532   |  46.827  | Underfitting      |
+| Batch + tanh, H=60, 40k ep. |  0.0177   |  0.1352  | Overfitting       |
+| **Online + tanh, H=15**     |  0.0128   |  0.0128  | **Good fit**      |
+| Batch + ReLU, H=15          |  0.0612   |  0.1291  | Good fit          |
+
+- Forward pass + backpropagation implemented **manually**
+- Compared **tanh**, **sigmoid**, and **ReLU** activations with He / Xavier initialisation
+- **Batch** vs **online (stochastic)** training — online generalises better despite noisier updates
+- Five experimental scenarios spanning optimal fit, underfitting (H=1), and overfitting (H=60)
+
+**Output:** function fit plots, train/test loss curves, activation comparison
+
+---
+
+### 04 · CIFAR-10 CNN — Baseline vs ResNet-style
+
+Two convolutional architectures benchmarked on **CIFAR-10**: a shallow 3-block CNN vs a deeper ResNet-style network with skip connections.
+
+| Model                       | Params  | Test Accuracy |
+| --------------------------- | :-----: | :-----------: |
+| Model A — 3-block CNN       |  324 K  |    79.16 %    |
+| **Model B — ResNet-style**  | 11.3 M  |  **90.13 %**  |
+
+- Custom **60 / 20 / 20** train/val/test split on 60 000 images
+- In-graph augmentation: horizontal flip, rotation, zoom, translation (training only)
+- Adam + EarlyStopping + ReduceLROnPlateau, 80 epochs
+- Per-class accuracy + confusion matrices reveal residual blocks lift the visually-similar categories (cat / dog / bird) from sub-70 % to above 80 %
+- Model B improves over the baseline by **~11 percentage points** while keeping overfitting controlled via BatchNorm and staged dropout
+
+**Output:** training curves, per-class accuracy, confusion matrices, misclassification gallery
+
+---
+
+### Final · Apartment Map — Prolog Knowledge Base + Python GUI
+
+A knowledge-based model of an apartment built in **Prolog**, with a **Python + Tkinter** GUI driving the engine through `pyswip`:
+
+- 5 rooms and 16 furniture items, related by `on`, `next_to`, `between`, `same_room`
+- **Dynamic** add / move / remove of objects via `assertz` / `retract`
+- Shortest-path navigation through **recursive** Prolog rules
+- Animated GUI — agent walks room-to-room along the computed path
+- Free-form Prolog query console embedded in the GUI
+
+**Output:** interactive apartment map with animated navigation and live query support  
+**Bonus:** language integration — Python (Tkinter) ↔ `pyswip` ↔ SWI-Prolog
+
+---
+
 ## Stack
 
-Python · NumPy · scikit-learn · Matplotlib
+Python · NumPy · scikit-learn · TensorFlow / Keras · Matplotlib · Seaborn · SWI-Prolog · pyswip · Tkinter
 
 ---
 
