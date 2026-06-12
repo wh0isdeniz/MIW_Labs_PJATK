@@ -3,7 +3,7 @@
 Project assignments for the course **Knowledge Engineering Methods (MIW)**  
 at the **Polish-Japanese Academy of Information Technology (PJATK)**.
 
-- Tasks 01–04 — graded **10/10**
+- Tasks 01–05 — graded **10/10**
 - Final — graded **18/18**
 
 ---
@@ -16,6 +16,7 @@ at the **Polish-Japanese Academy of Information Technology (PJATK)**.
 - **Supervised learning** — classical classification algorithms benchmarked on non-linear data
 - **Neural networks from scratch** — backpropagation, activation functions, batch vs online training
 - **Convolutional networks** — image classification, residual connections, regularisation
+- **Recurrent networks** — sequence modeling, LSTM gating, time-series forecasting
 - **Symbolic AI / Prolog** — knowledge representation, spatial reasoning, recursive pathfinding
 
 ---
@@ -97,12 +98,33 @@ Two convolutional architectures benchmarked on **CIFAR-10**: a shallow 3-block C
 
 ---
 
+### 05 · Stock Price Prediction with RNNs — AAPL
+
+Three recurrent architectures benchmarked on **Apple Inc. (AAPL)** daily prices (2018–2024): a univariate SimpleRNN, a univariate LSTM, and a multivariate LSTM fed with OHLCV data plus technical indicators.
+
+| Model                       | Input       | MSE (USD²) | MAE (USD) |
+| --------------------------- | ----------- | :--------: | :-------: |
+| **SimpleRNN — univariate**  | Close only  |  **10.22** | **2.46**  |
+| LSTM — univariate           | Close only  |   50.46    |   5.69    |
+| LSTM — multivariate         | 10 features |   80.03    |   6.95    |
+
+- Chronological **60 / 20 / 20** split (no shuffling) to prevent look-ahead **data leakage**
+- MinMax normalisation fit on training data only; **sliding-window** sequence generation
+- Exploratory analysis: moving averages, rolling volatility, seasonal decomposition, **ADF stationarity test**
+- SimpleRNN hyperparameters chosen by grid search over window {20, 40} and units {32, 64}
+- Multivariate features: OHLCV + **EMA, MACD, RSI, Bollinger-band width**
+- Counter-intuitively the **simplest model wins** — on a strongly trending asset, the SimpleRNN's short memory suffices while the deeper, feature-richer LSTMs add more variance than signal
+
+**Output:** price/volatility plots, seasonal decomposition, training curves, predictions vs. actual
+
+---
+
 ### Final · Apartment Map — Prolog Knowledge Base + Python GUI
 
 A knowledge-based model of an apartment built in **Prolog**, with a **Python + Tkinter** GUI driving the engine through `pyswip`:
 
 - 5 rooms and 16 furniture items, related by `on`, `next_to`, `between`, `same_room`
-- **Dynamic** add / move / remove of objects via `assertz` / `retract`
+- **Dynamic** add/move/remove of objects via `assertz` / `retract`
 - Shortest-path navigation through **recursive** Prolog rules
 - Animated GUI — agent walks room-to-room along the computed path
 - Free-form Prolog query console embedded in the GUI
@@ -114,7 +136,7 @@ A knowledge-based model of an apartment built in **Prolog**, with a **Python + T
 
 ## Stack
 
-Python · NumPy · scikit-learn · TensorFlow / Keras · Matplotlib · Seaborn · SWI-Prolog · pyswip · Tkinter
+Python · NumPy · pandas · scikit-learn · TensorFlow / Keras · statsmodels · yfinance · Matplotlib · Seaborn · SWI-Prolog · pyswip · Tkinter
 
 ---
 
